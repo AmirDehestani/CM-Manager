@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
+import Cell from './Cell';
+import * as XLSX from 'xlsx';
 
 interface WorkbookObserverProps {
     workbookData: Record<string, any>;
-    activeSheet: string | null;
+    setWorkbookData: React.Dispatch<React.SetStateAction<Record<string, any>>>;
+    activeSheet: string;
 }
 
 const WorkbookObserver = ({
     workbookData,
+    setWorkbookData,
     activeSheet,
 }: WorkbookObserverProps) => {
     const [sheetData, setSheetData] = useState<any[] | null>(null);
@@ -55,9 +59,30 @@ const WorkbookObserver = ({
         return cell.toString();
     };
 
+    const exportWorkbook = () => {
+        if (!sheetData || !activeSheet) {
+            alert('No data to export');
+            return;
+        }
+
+        try {
+            const wb = XLSX.utils.book_new();
+            for (const [sheetName, data] of Object.entries(workbookData)) {
+                const ws = XLSX.utils.json_to_sheet(data);
+                XLSX.utils.book_append_sheet(wb, ws, sheetName);
+            }
+            const wbName = new Date().getTime();
+            XLSX.writeFile(wb, `${wbName}.xlsx`);
+        } catch (error) {
+            console.error('Error exporting workbook:', error);
+            alert('Failed to export workbook. See console for details.');
+        }
+    };
+
     return (
         <div className="workbook-observer">
             <h2>Workbook Data</h2>
+            <button onClick={exportWorkbook}>Export workbook</button>
 
             {hasData ? (
                 <>
@@ -83,11 +108,24 @@ const WorkbookObserver = ({
                                             (_, cellIndex) => (
                                                 <td key={cellIndex}>
                                                     {Array.isArray(row) &&
-                                                    cellIndex < row.length
-                                                        ? renderCellContent(
-                                                              row[cellIndex]
-                                                          )
-                                                        : ''}
+                                                    cellIndex < row.length ? (
+                                                        <Cell
+                                                            cellValue={renderCellContent(
+                                                                row[cellIndex]
+                                                            )}
+                                                            setWorkbookData={
+                                                                setWorkbookData
+                                                            }
+                                                            row={rowIndex + 1}
+                                                            col={cellIndex}
+                                                            activeSheet={
+                                                                activeSheet
+                                                            }
+                                                            key={cellIndex}
+                                                        />
+                                                    ) : (
+                                                        ''
+                                                    )}
                                                 </td>
                                             )
                                         )}

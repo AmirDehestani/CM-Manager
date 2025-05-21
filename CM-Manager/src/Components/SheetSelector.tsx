@@ -5,7 +5,7 @@ const SheetSelector = ({
     setActiveSheet,
 }: {
     sheets: string[];
-    setActiveSheet: Dispatch<SetStateAction<string | null>>;
+    setActiveSheet: Dispatch<SetStateAction<string>>;
 }) => {
     // Set the first sheet as active by default
     useEffect(() => {

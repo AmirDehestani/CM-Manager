@@ -5,9 +5,10 @@ import { useState } from 'react';
 import SheetSelector from './Components/SheetSelector';
 
 function App() {
+    // TODO: To avoid prop drilling, explore a global state management solution like Redux or Context API.
     const [workbookData, setWorkbookData] = useState<Record<string, []>>({});
     const [sheets, setSheets] = useState<string[]>([]);
-    const [activeSheet, setActiveSheet] = useState<string | null>(null);
+    const [activeSheet, setActiveSheet] = useState<string>('');
 
     return (
         <div className="app-container">
@@ -25,6 +26,7 @@ function App() {
                 />
                 <WorkbookObserver
                     workbookData={workbookData}
+                    setWorkbookData={setWorkbookData}
                     activeSheet={activeSheet}
                 />
             </main>
