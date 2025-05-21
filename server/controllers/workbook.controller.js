@@ -16,12 +16,11 @@ workbookRouter.post('/', async (req, res) => {
     } catch (err) {
         res.status(400).json({message: err.message});
     }
-    
 })
 
 workbookRouter.get('/', async (req, res) => {
     try {
-        const workbooks = await Workbook.find().sort({ lastUpdate: -1})
+        const workbooks = await Workbook.find().sort({ lastUpdate: -1 })
         res.json(workbooks);
     } catch (error) {
         res.status(500).json({message: err.message })

@@ -6,9 +6,9 @@ import SheetSelector from './components/SheetSelector';
 
 function App() {
     // TODO: To avoid prop drilling, explore a global state management solution like Redux or Context API.
-    const [workbookData, setWorkbookData] = useState<Record<string, []>>({});
-    const [sheets, setSheets] = useState<string[]>([]);
-    const [activeSheet, setActiveSheet] = useState<string>('');
+    const [workbookData, setWorkbookData] = useState({});
+    const [sheets, setSheets] = useState([]);
+    const [activeSheet, setActiveSheet] = useState('');
 
     return (
         <div className="app-container">

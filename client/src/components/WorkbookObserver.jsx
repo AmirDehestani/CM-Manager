@@ -1,24 +1,18 @@
 import { useEffect, useState } from 'react';
-import Cell from './Cell';
+import Cell from './Cell.jsx';
 import * as XLSX from 'xlsx';
 import { saveWorkbook } from '../services/workbook.service.js'
-import GenericInput from './generic/GenericInput.js';
-
-interface WorkbookObserverProps {
-    workbookData: Record<string, any>;
-    setWorkbookData: React.Dispatch<React.SetStateAction<Record<string, any>>>;
-    activeSheet: string;
-}
+import GenericInput from './generic/GenericInput.jsx';
 
 const WorkbookObserver = ({
     workbookData,
     setWorkbookData,
     activeSheet,
-}: WorkbookObserverProps) => {
-    const [sheetData, setSheetData] = useState<any[] | null>(null);
+}) => {
+    const [sheetData, setSheetData] = useState(null);
     const [hasData, setHasData] = useState(false);
     const [maxColumns, setMaxColumns] = useState(0);
-    const [columnHeaders, setColumnHeaders] = useState<any[]>([]);
+    const [columnHeaders, setColumnHeaders] = useState([]);
     const [wbName, setWbName] = useState('');
     const [ticketLink, setTicketLinke] = useState('');
 
@@ -57,7 +51,7 @@ const WorkbookObserver = ({
     }, [workbookData, activeSheet]);
 
     // Function to handle cell display
-    const renderCellContent = (cell: any) => {
+    const renderCellContent = (cell) => {
         if (cell === null || cell === undefined) return '';
         if (typeof cell === 'object') return JSON.stringify(cell);
         return cell.toString();

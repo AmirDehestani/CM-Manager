@@ -1,24 +1,18 @@
-import { useState, memo } from 'react';
-
-interface CellProps {
-    cellValue: string;
-    setWorkbookData: React.Dispatch<React.SetStateAction<Record<string, any>>>;
-    row: number;
-    col: number;
-    activeSheet: string;
-}
+import { useState, useEffect, memo } from 'react';
 
 const Cell = memo(
     // Memo is essential to prevent unnecessary re-renders
-    ({ cellValue, setWorkbookData, row, col, activeSheet }: CellProps) => {
+    ({ cellValue, setWorkbookData, row, col, activeSheet }) => {
         const [isEditing, setIsEditing] = useState(false);
         const [value, setValue] = useState(cellValue);
 
-        const handleEdit = () => {
-            setIsEditing(true);
-        };
+        // This updates the existing cell value when the active sheet changes
+        useEffect(() => {
+            setValue(cellValue);
+        }, [cellValue]);
 
-        const handleChange = (e: any) => {
+
+        const handleChange = (e) => {
             const newValue = e.target.value;
             setValue(newValue);
             setWorkbookData((prevData) => {
@@ -37,6 +31,10 @@ const Cell = memo(
 
         const handleBlur = () => {
             setIsEditing(false);
+        };
+
+        const handleEdit = () => {
+            setIsEditing(true);
         };
 
         return (

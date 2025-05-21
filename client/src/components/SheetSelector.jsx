@@ -1,11 +1,8 @@
-import { useEffect, type Dispatch, type SetStateAction } from 'react';
+import { useEffect } from 'react';
 
 const SheetSelector = ({
     sheets,
     setActiveSheet,
-}: {
-    sheets: string[];
-    setActiveSheet: Dispatch<SetStateAction<string>>;
 }) => {
     // Set the first sheet as active by default
     useEffect(() => {
@@ -18,7 +15,7 @@ const SheetSelector = ({
         return '';
     }
 
-    const handleSheetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleSheetChange = (event) => {
         const selectedSheet = event.target.value;
         setActiveSheet(selectedSheet);
     };

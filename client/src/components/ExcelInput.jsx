@@ -2,11 +2,11 @@ import { useState } from 'react';
 import XLSX from 'xlsx';
 import Loader from './Loader';
 
-function ExcelInput({ setWorkbookData, setSheets }: any) {
-    const [fileName, setFileName] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+function ExcelInput({ setWorkbookData, setSheets }) {
+    const [fileName, setFileName] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleUpload = async (e: any) => {
+    const handleUpload = async (e) => {
         try {
             setIsLoading(true);
             const file = e.target.files[0];
@@ -25,8 +25,8 @@ function ExcelInput({ setWorkbookData, setSheets }: any) {
                     header: 1,
                     defval: '',
                 });
-                setSheets((prevSheets: any) => [...prevSheets, sheet]);
-                setWorkbookData((prevData: any) => ({...prevData, [sheet]: jsonData}));
+                setSheets((prevSheets) => [...prevSheets, sheet]);
+                setWorkbookData((prevData) => ({...prevData, [sheet]: jsonData}));
             }
         } catch (error) {
             console.error('Error processing Excel file:', error);
