@@ -40,19 +40,19 @@ const Cell = memo(
         };
 
         return (
-            <div className="cell" onClick={handleEdit}>
+            <td className="cell" onClick={handleEdit}>
                 {isEditing ? (
                     <input
                         autoFocus
-                        type="text"
-                        value={value}
+                        type='text'
+                        value={value ?? ''}
                         onChange={handleChange}
                         onBlur={handleBlur}
                     />
                 ) : (
-                    <span>{value}</span>
+                    <span>{value ?? ''}</span>
                 )}
-            </div>
+            </td>
         );
     }
 );

@@ -42,7 +42,7 @@ function ExcelInput({ setWorkbookData, setSheets }: any) {
                     <h2>Upload Excel File</h2>
                     <input
                         type="file"
-                        accept=".xlsx, .xls"
+                        accept=".xlsx, .xls, .xlsm"
                         onChange={(e) => handleUpload(e)}
                     />
                     {fileName && <p>File: {fileName}</p>}

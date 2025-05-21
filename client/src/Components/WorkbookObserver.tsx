@@ -13,6 +13,7 @@ const WorkbookObserver = ({
     setWorkbookData,
     activeSheet,
 }: WorkbookObserverProps) => {
+    console.log(workbookData);
     const [sheetData, setSheetData] = useState<any[] | null>(null);
     const [hasData, setHasData] = useState(false);
     const [maxColumns, setMaxColumns] = useState(0);
@@ -46,7 +47,7 @@ const WorkbookObserver = ({
 
             // Generate column headers
             const headers = Array.from({ length: maxCols }, (_, i) => {
-                return data[0] && data[0][i] ? data[0][i] : `Column ${i + 1}`;
+                return data[0] && data[0][i] ? data[0][i] : '';
             });
             setColumnHeaders(headers);
         }
@@ -106,27 +107,25 @@ const WorkbookObserver = ({
                                         </td>
                                         {Array.from({ length: maxColumns }).map(
                                             (_, cellIndex) => (
-                                                <td key={cellIndex}>
-                                                    {Array.isArray(row) &&
-                                                    cellIndex < row.length ? (
-                                                        <Cell
-                                                            cellValue={renderCellContent(
-                                                                row[cellIndex]
-                                                            )}
-                                                            setWorkbookData={
-                                                                setWorkbookData
-                                                            }
-                                                            row={rowIndex + 1}
-                                                            col={cellIndex}
-                                                            activeSheet={
-                                                                activeSheet
-                                                            }
-                                                            key={cellIndex}
-                                                        />
-                                                    ) : (
-                                                        ''
-                                                    )}
-                                                </td>
+                                                Array.isArray(row) &&
+                                                cellIndex < row.length ? (
+                                                    <Cell
+                                                        cellValue={renderCellContent(
+                                                            row[cellIndex]
+                                                        )}
+                                                        setWorkbookData={
+                                                            setWorkbookData
+                                                        }
+                                                        row={rowIndex + 1}
+                                                        col={cellIndex}
+                                                        activeSheet={
+                                                            activeSheet
+                                                        }
+                                                        key={cellIndex}
+                                                    />
+                                                ) : (
+                                                    <td key={cellIndex}></td>
+                                                )
                                             )
                                         )}
                                     </tr>
