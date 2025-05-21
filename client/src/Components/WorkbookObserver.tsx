@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import Cell from './Cell';
 import * as XLSX from 'xlsx';
+import { saveWorkbook } from '../services/workbook.service.js'
+import GenericInput from './generic/GenericInput.js';
 
 interface WorkbookObserverProps {
     workbookData: Record<string, any>;
@@ -13,11 +15,12 @@ const WorkbookObserver = ({
     setWorkbookData,
     activeSheet,
 }: WorkbookObserverProps) => {
-    console.log(workbookData);
     const [sheetData, setSheetData] = useState<any[] | null>(null);
     const [hasData, setHasData] = useState(false);
     const [maxColumns, setMaxColumns] = useState(0);
     const [columnHeaders, setColumnHeaders] = useState<any[]>([]);
+    const [wbName, setWbName] = useState('');
+    const [ticketLink, setTicketLinke] = useState('');
 
     useEffect(() => {
         if (!workbookData || !activeSheet) {
@@ -80,10 +83,19 @@ const WorkbookObserver = ({
         }
     };
 
+    const handleSave = () => {
+        saveWorkbook(wbName, ticketLink, workbookData)
+    }
+
     return (
         <div className="workbook-observer">
             <h2>Workbook Data</h2>
             <button onClick={exportWorkbook}>Export workbook</button>
+            <button onClick={handleSave}>Save workbook</button>
+
+            <GenericInput state={wbName} setState={setWbName}/>
+            <GenericInput state={ticketLink} setState={setTicketLinke}/>
+
 
             {hasData ? (
                 <>

@@ -1,8 +1,8 @@
-import ExcelInput from './Components/ExcelInput';
-import WorkbookObserver from './Components/WorkbookObserver';
+import ExcelInput from './components/ExcelInput';
+import WorkbookObserver from './components/WorkbookObserver';
 import './App.css';
 import { useState } from 'react';
-import SheetSelector from './Components/SheetSelector';
+import SheetSelector from './components/SheetSelector';
 
 function App() {
     // TODO: To avoid prop drilling, explore a global state management solution like Redux or Context API.
