@@ -8,5 +8,15 @@ export const saveWorkbook = async (name, ticket, workbook) => {
         ticket: ticket,
         workbook: workbook
     })
-    console.log(response)
+    return response;
+}
+
+export const loadWorkbooks = async () => {
+    const response = await axios.get(`${API_URL}/workbooks`)
+    return response;
+}
+
+export const deleteWorkbook = async (workbookId) => {
+    const response = await axios.delete(`${API_URL}/workbooks/${workbookId}`)
+    return response;
 }

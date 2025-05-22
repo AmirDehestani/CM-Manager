@@ -1,25 +1,22 @@
-import ExcelInput from './components/ExcelInput';
-import WorkbookObserver from './components/WorkbookObserver';
 import './App.css';
-import SheetSelector from './components/SheetSelector';
-
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './pages/Layout.jsx';
+import Home from './pages/Home.jsx';
+import NoPage from './pages/NoPage.jsx';
+import Workbooks from './pages/workbooks.jsx';
 
 function App() {
 
     return (
-        <div className="app-container">
-            <header>
-                <h1>CM Manager</h1>
-            </header>
-            <main>
-                <ExcelInput />
-                <SheetSelector />
-                <WorkbookObserver />
-            </main>
-            <footer>
-                <p>© 2025 CM Manager</p>
-            </footer>
-        </div>
+        <BrowserRouter>
+            <Routes>
+                <Route path='/' element={<Layout />}>
+                    <Route index element={<Home />}></Route>
+                    <Route path='workbooks' element={<Workbooks />}></Route>
+                    <Route path='*' element={<NoPage />}></Route>
+                </Route>
+            </Routes>
+        </BrowserRouter>
     );
 }
 
