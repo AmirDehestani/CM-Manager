@@ -1,12 +1,25 @@
+import { useEffect, useContext } from "react";
 import ExcelInput from "../components/ExcelInput";
-import SheetSelector from "../components/SheetSelector";
 import WorkbookObserver from "../components/WorkbookObserver";
+import { WorkbookContext } from "../contexts/WorkbookContext";
+
 
 const Home = () => {
+    const {setWorkbookData, setSheets, setActiveSheet, setWorkbookId} = useContext(WorkbookContext);
+
+    useEffect(() => {
+        return () => {
+            // Empty any existing workbook data after unmounting the component (home page)
+            setWorkbookData({});
+            setSheets([]);
+            setActiveSheet('');
+            setWorkbookId(null);
+        }
+    }, [])
+
     return (
         <>
             <ExcelInput />
-            <SheetSelector />
             <WorkbookObserver />
         </>
     )

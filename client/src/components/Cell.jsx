@@ -1,11 +1,13 @@
-import { useState, useEffect, memo } from 'react';
+import { useState, useEffect, memo, useContext } from 'react';
+import { WorkbookContext } from '../contexts/WorkbookContext';
 
 const Cell = memo(
     // Memo is essential to prevent unnecessary re-renders
-    ({ cellValue, setWorkbookData, row, col, activeSheet }) => {
+    ({ cellValue, row, col }) => {
         const [isEditing, setIsEditing] = useState(false);
         const [value, setValue] = useState(cellValue);
         const [hovered, setHovered] = useState(false);
+        const {setWorkbookData, activeSheet} = useContext(WorkbookContext)
 
         // This updates the existing cell value when the active sheet changes
         useEffect(() => {

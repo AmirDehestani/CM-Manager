@@ -1,40 +1,37 @@
 import { useContext, useEffect, useState } from 'react';
 import Cell from './Cell.jsx';
 import * as XLSX from 'xlsx';
-import { saveWorkbook } from '../services/workbook.service.js'
+import { saveWorkbook, getWorkbookData, updateWorkbook } from '../services/workbook.service.js'
 import GenericInput from './generic/GenericInput.jsx';
 import { WorkbookContext } from '../contexts/WorkbookContext.jsx';
 import SheetSelector from './SheetSelector.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const WorkbookObserver = () => {
-    const [sheetData, setSheetData] = useState(null);
     const [hasData, setHasData] = useState(false);
     const [maxColumns, setMaxColumns] = useState(0);
     const [columnHeaders, setColumnHeaders] = useState([]);
     const [wbName, setWbName] = useState('');
     const [ticketLink, setTicketLink] = useState('');
-    const {workbookData, setWorkbookData, activeSheet} = useContext(WorkbookContext)
+    const {workbookData, setWorkbookData, activeSheet, workbookId, setSheets} = useContext(WorkbookContext)
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!workbookData || !activeSheet) {
+            if (workbookId) {
+                fetchWorkbookDataFromId();
+            }
             return;
         }
-        const data = workbookData[activeSheet] ?? null;
-        if (!data) {
-            setSheetData(null);
-            setHasData(false);
-            return;
-        }
-        setSheetData(data);
 
-        // Check if data is empty
-        const dataExists = data && Array.isArray(data) && data.length > 0;
+        const currSheet = workbookData[activeSheet] ?? null;
+        const dataExists = currSheet && Array.isArray(currSheet) && currSheet.length > 0;
         setHasData(dataExists);
 
         if (dataExists) {
             // Calculate max columns
             let maxCols = 0;
-            data.forEach((row) => {
+            currSheet.forEach((row) => {
                 if (Array.isArray(row) && row.length > maxCols) {
                     maxCols = row.length;
                 }
@@ -43,21 +40,20 @@ const WorkbookObserver = () => {
 
             // Generate column headers
             const headers = Array.from({ length: maxCols }, (_, i) => {
-                return data[0] && data[0][i] ? data[0][i] : '';
+                return currSheet[0] && currSheet[0][i] ? currSheet[0][i] : '';
             });
             setColumnHeaders(headers);
         }
     }, [workbookData, activeSheet]);
 
     // Function to handle cell display
-    const renderCellContent = (cell) => {
+    const getCellContent = (cell) => {
         if (cell === null || cell === undefined) return '';
-        if (typeof cell === 'object') return JSON.stringify(cell);
         return cell.toString();
     };
 
     const exportWorkbook = () => {
-        if (!sheetData || !activeSheet) {
+        if (!workbookData) {
             alert('No data to export');
             return;
         }
@@ -76,17 +72,43 @@ const WorkbookObserver = () => {
         }
     };
 
-    const handleSave = () => {
-        saveWorkbook(wbName, ticketLink, workbookData)
+    const handleSave = async () => {
+        let response;
+        if (workbookId) {
+            response = await updateWorkbook(workbookId, wbName, ticketLink, workbookData);
+        } else {
+            response = await saveWorkbook(wbName, ticketLink, workbookData)
+        }
+        
+        if (response.status == 201) {
+            navigate('/workbooks');
+        } else {
+            console.error(response);
+            alert('An error occurd while saving the workbook');
+        }
+    }
+
+    const fetchWorkbookDataFromId = async () => {
+        const response = await getWorkbookData(workbookId);
+        if (response.status == 200) {
+            setWbName(response.data.name);
+            setTicketLink(response.data.ticket);
+            setWorkbookData(response.data.workbook.data);
+            Object.keys(response.data.workbook.data).forEach((sheet) => {
+                setSheets((prevSheets) => [...prevSheets, sheet]);
+            })
+        } else {
+            alert("Failed to load workbook data");
+        }
     }
 
     return (
         <div className="workbook-observer">
             <h2>Workbook Data</h2>
+            <SheetSelector/>
 
             {hasData ? (
                 <>
-                    <SheetSelector/>
                     <button className='input-component' onClick={exportWorkbook}>Export workbook</button>
                     <button className='input-component' onClick={handleSave}>Save workbook</button>
                     <br></br>
@@ -99,13 +121,13 @@ const WorkbookObserver = () => {
                                     <th>#</th>
                                     {columnHeaders.map((header, index) => (
                                         <th key={index}>
-                                            {renderCellContent(header)}
+                                            {getCellContent(header)}
                                         </th>
                                     ))}
                                 </tr>
                             </thead>
                             <tbody>
-                                {sheetData?.slice(1).map((row, rowIndex) => (
+                                {workbookData[activeSheet]?.slice(1).map((row, rowIndex) => (
                                     <tr key={rowIndex}>
                                         <td className="row-index">
                                             {rowIndex + 1}
@@ -115,17 +137,11 @@ const WorkbookObserver = () => {
                                                 Array.isArray(row) &&
                                                 cellIndex < row.length ? (
                                                     <Cell
-                                                        cellValue={renderCellContent(
+                                                        cellValue={getCellContent(
                                                             row[cellIndex]
                                                         )}
-                                                        setWorkbookData={
-                                                            setWorkbookData
-                                                        }
                                                         row={rowIndex + 1}
                                                         col={cellIndex}
-                                                        activeSheet={
-                                                            activeSheet
-                                                        }
                                                         key={cellIndex}
                                                     />
                                                 ) : (

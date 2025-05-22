@@ -82,8 +82,11 @@ workbookRouter.put('/:id', async (req, res) => {
             });
             await newWorkbookData.save();
             workbook.workbook = newWorkbookData._id;
-            workbook.save();
         }
+
+        workbook.name = req.body.name;
+        workbook.ticket = req.body.ticket;
+        workbook.save();
 
         res.status(201).json(workbook);
     } catch (error) {

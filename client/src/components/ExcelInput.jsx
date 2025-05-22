@@ -14,7 +14,7 @@ function ExcelInput() {
             const file = e.target.files[0];
             if (!file) return;
 
-            setWorkbookData([]);
+            setWorkbookData({});
             setSheets([]);
 
             setFileName(file.name);
