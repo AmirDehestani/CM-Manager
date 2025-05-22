@@ -1,11 +1,12 @@
-const GenericInput = ({state, setState}) => {
+const GenericInput = ({state, setState, placeholder=""}) => {
 
     const handleInputChange = (event) => {
         setState(event.target.value);
     }
 
-    return <input
+    return <input className="input-component"
         value={state}
+        placeholder={placeholder}
         onChange={handleInputChange}
     />
 }

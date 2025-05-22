@@ -4,20 +4,20 @@ const Layout = () => {
     return (
         <>
             <header>
-                <h1>CM Manager</h1>
+                <h2>CM Manager</h2>
+                <nav>
+                    <ul>
+                        <li>
+                            <Link to="/">Home</Link>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <Link to="/workbooks">Workbooks</Link>
+                        </li>
+                    </ul>
+                </nav>
             </header>
-            <nav>
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                </ul>
-                <ul>
-                    <li>
-                        <Link to="/workbooks">Workbooks</Link>
-                    </li>
-                </ul>
-            </nav>
             <main>
                 <div className="app-container">
                     <Outlet />

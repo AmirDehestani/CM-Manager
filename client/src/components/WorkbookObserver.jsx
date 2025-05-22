@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 import { saveWorkbook } from '../services/workbook.service.js'
 import GenericInput from './generic/GenericInput.jsx';
 import { WorkbookContext } from '../contexts/WorkbookContext.jsx';
+import SheetSelector from './SheetSelector.jsx';
 
 const WorkbookObserver = () => {
     const [sheetData, setSheetData] = useState(null);
@@ -11,7 +12,7 @@ const WorkbookObserver = () => {
     const [maxColumns, setMaxColumns] = useState(0);
     const [columnHeaders, setColumnHeaders] = useState([]);
     const [wbName, setWbName] = useState('');
-    const [ticketLink, setTicketLinke] = useState('');
+    const [ticketLink, setTicketLink] = useState('');
     const {workbookData, setWorkbookData, activeSheet} = useContext(WorkbookContext)
 
     useEffect(() => {
@@ -82,15 +83,15 @@ const WorkbookObserver = () => {
     return (
         <div className="workbook-observer">
             <h2>Workbook Data</h2>
-            <button onClick={exportWorkbook}>Export workbook</button>
-            <button onClick={handleSave}>Save workbook</button>
-
-            <GenericInput state={wbName} setState={setWbName}/>
-            <GenericInput state={ticketLink} setState={setTicketLinke}/>
-
 
             {hasData ? (
                 <>
+                    <SheetSelector/>
+                    <button className='input-component' onClick={exportWorkbook}>Export workbook</button>
+                    <button className='input-component' onClick={handleSave}>Save workbook</button>
+                    <br></br>
+                    <GenericInput state={wbName} setState={setWbName} placeholder='Workbook name'/>
+                    <GenericInput state={ticketLink} setState={setTicketLink} placeholder='Link to JIRA ticket'/>
                     <div className="workbook-table-container">
                         <table className="workbook-table">
                             <thead>

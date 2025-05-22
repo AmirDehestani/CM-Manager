@@ -21,6 +21,7 @@ const SheetSelector = () => {
 
     return (
         <div className="sheet-selector">
+            Select worksheet:&nbsp;
             <select onChange={handleSheetChange}>
                 {sheets.map((sheet, index) => (
                     <option key={index} value={sheet}>
