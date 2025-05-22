@@ -47,7 +47,6 @@ workbookSchema.pre('deleteOne', async function (next) {
 });
 
 workbookSchema.pre('save', async function (next) {
-    console.log('Saving workbook:', this);
     this.lastUpdate = Date.now();
     next();
 });

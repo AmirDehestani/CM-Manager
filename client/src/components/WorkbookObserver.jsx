@@ -6,6 +6,7 @@ import GenericInput from './generic/GenericInput.jsx';
 import { WorkbookContext } from '../contexts/WorkbookContext.jsx';
 import SheetSelector from './SheetSelector.jsx';
 import { useNavigate } from 'react-router-dom';
+import Macros from './Macros.jsx';
 
 const WorkbookObserver = () => {
     const [hasData, setHasData] = useState(false);
@@ -30,12 +31,8 @@ const WorkbookObserver = () => {
 
         if (dataExists) {
             // Calculate max columns
-            let maxCols = 0;
-            currSheet.forEach((row) => {
-                if (Array.isArray(row) && row.length > maxCols) {
-                    maxCols = row.length;
-                }
-            });
+            let maxCols = currSheet[0].length;
+
             setMaxColumns(maxCols);
 
             // Generate column headers
@@ -45,12 +42,6 @@ const WorkbookObserver = () => {
             setColumnHeaders(headers);
         }
     }, [workbookData, activeSheet]);
-
-    // Function to handle cell display
-    const getCellContent = (cell) => {
-        if (cell === null || cell === undefined) return '';
-        return cell.toString();
-    };
 
     const exportWorkbook = () => {
         if (!workbookData) {
@@ -114,6 +105,7 @@ const WorkbookObserver = () => {
                     <br></br>
                     <GenericInput state={wbName} setState={setWbName} placeholder='Workbook name'/>
                     <GenericInput state={ticketLink} setState={setTicketLink} placeholder='Link to JIRA ticket'/>
+                    <Macros/>
                     <div className="workbook-table-container">
                         <table className="workbook-table">
                             <thead>
@@ -121,7 +113,7 @@ const WorkbookObserver = () => {
                                     <th>#</th>
                                     {columnHeaders.map((header, index) => (
                                         <th key={index}>
-                                            {getCellContent(header)}
+                                            {header}
                                         </th>
                                     ))}
                                 </tr>
@@ -132,22 +124,13 @@ const WorkbookObserver = () => {
                                         <td className="row-index">
                                             {rowIndex + 1}
                                         </td>
-                                        {Array.from({ length: maxColumns }).map(
-                                            (_, cellIndex) => (
-                                                Array.isArray(row) &&
-                                                cellIndex < row.length ? (
-                                                    <Cell
-                                                        cellValue={getCellContent(
-                                                            row[cellIndex]
-                                                        )}
-                                                        row={rowIndex + 1}
-                                                        col={cellIndex}
-                                                        key={cellIndex}
-                                                    />
-                                                ) : (
-                                                    <td key={cellIndex}></td>
-                                                )
-                                            )
+                                        {row.map((val, cellIndex) =>
+                                            <Cell
+                                                cellValue={val}
+                                                row={rowIndex + 1}
+                                                col={cellIndex}
+                                                key={cellIndex}
+                                            />
                                         )}
                                     </tr>
                                 ))}
