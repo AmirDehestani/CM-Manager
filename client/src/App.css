@@ -69,7 +69,6 @@ footer {
 
 .workbook-table th,
 .workbook-table td {
-    border: 1px solid #ddd;
     padding: 8px 12px;
     text-align: left;
 }
@@ -97,4 +96,12 @@ footer {
 
 .workbook-table tr:hover {
     background-color: #494949;
+}
+
+.cell {
+    border: 1px solid white;
+}
+
+.cell:hover {
+    box-shadow: inset 0 0 0 2px lightblue;
 }

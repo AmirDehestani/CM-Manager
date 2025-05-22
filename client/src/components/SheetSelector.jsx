@@ -1,9 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
+import { WorkbookContext } from '../contexts/WorkbookContext';
 
-const SheetSelector = ({
-    sheets,
-    setActiveSheet,
-}) => {
+const SheetSelector = () => {
+    const {sheets, setActiveSheet} = useContext(WorkbookContext)
     // Set the first sheet as active by default
     useEffect(() => {
         if (sheets.length > 0) {

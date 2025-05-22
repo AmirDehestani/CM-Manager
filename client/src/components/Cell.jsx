@@ -5,6 +5,7 @@ const Cell = memo(
     ({ cellValue, setWorkbookData, row, col, activeSheet }) => {
         const [isEditing, setIsEditing] = useState(false);
         const [value, setValue] = useState(cellValue);
+        const [hovered, setHovered] = useState(false);
 
         // This updates the existing cell value when the active sheet changes
         useEffect(() => {
@@ -38,7 +39,7 @@ const Cell = memo(
         };
 
         return (
-            <td className="cell" onClick={handleEdit}>
+            <td className={`cell ${hovered ? 'hovered-cell' : ''}`} onClick={handleEdit} onMouseEnter={() => setHovered(true)} onMouseLeave={()=>setHovered(false)}>
                 {isEditing ? (
                     <input
                         autoFocus

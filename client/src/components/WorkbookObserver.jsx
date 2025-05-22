@@ -1,20 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Cell from './Cell.jsx';
 import * as XLSX from 'xlsx';
 import { saveWorkbook } from '../services/workbook.service.js'
 import GenericInput from './generic/GenericInput.jsx';
+import { WorkbookContext } from '../contexts/WorkbookContext.jsx';
 
-const WorkbookObserver = ({
-    workbookData,
-    setWorkbookData,
-    activeSheet,
-}) => {
+const WorkbookObserver = () => {
     const [sheetData, setSheetData] = useState(null);
     const [hasData, setHasData] = useState(false);
     const [maxColumns, setMaxColumns] = useState(0);
     const [columnHeaders, setColumnHeaders] = useState([]);
     const [wbName, setWbName] = useState('');
     const [ticketLink, setTicketLinke] = useState('');
+    const {workbookData, setWorkbookData, activeSheet} = useContext(WorkbookContext)
 
     useEffect(() => {
         if (!workbookData || !activeSheet) {

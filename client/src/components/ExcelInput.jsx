@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { WorkbookContext } from '../contexts/WorkbookContext';
 import XLSX from 'xlsx';
 import Loader from './Loader';
 
-function ExcelInput({ setWorkbookData, setSheets }) {
+function ExcelInput() {
     const [fileName, setFileName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const { setWorkbookData, setSheets } = useContext(WorkbookContext)
 
     const handleUpload = async (e) => {
         try {
