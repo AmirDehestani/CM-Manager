@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react';
-import Cell from './Cell.jsx';
 import * as XLSX from 'xlsx';
 import { saveWorkbook, getWorkbookData, updateWorkbook } from '../services/workbook.service.js'
 import GenericInput from './generic/GenericInput.jsx';
@@ -7,13 +6,13 @@ import { WorkbookContext } from '../contexts/WorkbookContext.jsx';
 import SheetSelector from './SheetSelector.jsx';
 import { useNavigate } from 'react-router-dom';
 import Macros from './Macros.jsx';
+import Sheet from "./Sheet.jsx";
 
 const WorkbookObserver = () => {
     const [hasData, setHasData] = useState(false);
-    const [maxColumns, setMaxColumns] = useState(0);
-    const [columnHeaders, setColumnHeaders] = useState([]);
     const [wbName, setWbName] = useState('');
     const [ticketLink, setTicketLink] = useState('');
+    const [hasHeaders, setHasHeaders] = useState(false);
     const {workbookData, setWorkbookData, activeSheet, workbookId, setSheets} = useContext(WorkbookContext)
     const navigate = useNavigate();
 
@@ -24,23 +23,7 @@ const WorkbookObserver = () => {
             }
             return;
         }
-
-        const currSheet = workbookData[activeSheet] ?? null;
-        const dataExists = currSheet && Array.isArray(currSheet) && currSheet.length > 0;
-        setHasData(dataExists);
-
-        if (dataExists) {
-            // Calculate max columns
-            let maxCols = currSheet[0].length;
-
-            setMaxColumns(maxCols);
-
-            // Generate column headers
-            const headers = Array.from({ length: maxCols }, (_, i) => {
-                return currSheet[0] && currSheet[0][i] ? currSheet[0][i] : '';
-            });
-            setColumnHeaders(headers);
-        }
+        setHasData(workbookData[activeSheet] && Array.isArray(workbookData[activeSheet]) && workbookData[activeSheet].length > 0);
     }, [workbookData, activeSheet]);
 
     const exportWorkbook = () => {
@@ -102,41 +85,12 @@ const WorkbookObserver = () => {
                 <>
                     <button className='input-component' onClick={exportWorkbook}>Export workbook</button>
                     <button className='input-component' onClick={handleSave}>Save workbook</button>
+                    <input onClick={() => setHasHeaders(!hasHeaders)} type='checkbox' /><span>This sheet has headers</span>
                     <br></br>
                     <GenericInput state={wbName} setState={setWbName} placeholder='Workbook name'/>
                     <GenericInput state={ticketLink} setState={setTicketLink} placeholder='Link to JIRA ticket'/>
                     <Macros/>
-                    <div className="workbook-table-container">
-                        <table className="workbook-table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    {columnHeaders.map((header, index) => (
-                                        <th key={index}>
-                                            {header}
-                                        </th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {workbookData[activeSheet]?.slice(1).map((row, rowIndex) => (
-                                    <tr key={rowIndex}>
-                                        <td className="row-index">
-                                            {rowIndex + 1}
-                                        </td>
-                                        {row.map((val, cellIndex) =>
-                                            <Cell
-                                                cellValue={val}
-                                                row={rowIndex + 1}
-                                                col={cellIndex}
-                                                key={cellIndex}
-                                            />
-                                        )}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                    <Sheet hasHeaders={hasHeaders} />
                 </>
             ) : (
                 <p>No data available. Please upload an Excel file.</p>
