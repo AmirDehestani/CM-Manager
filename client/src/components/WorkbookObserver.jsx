@@ -13,7 +13,7 @@ const WorkbookObserver = () => {
     const [wbName, setWbName] = useState('');
     const [ticketLink, setTicketLink] = useState('');
     const [hasHeaders, setHasHeaders] = useState(false);
-    const {workbookData, setWorkbookData, activeSheet, workbookId, setSheets} = useContext(WorkbookContext)
+    const {workbookData, setWorkbookData, activeSheet, workbookId, setSheets, setActiveSheet} = useContext(WorkbookContext)
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -76,9 +76,22 @@ const WorkbookObserver = () => {
         }
     }
 
+    const handleCreateSheet = () => {
+        const rowCount = 5;
+        const colCount = 5;
+        const emptyArray = Array.from({ length: rowCount }, () => Array(colCount).fill(null));
+        setSheets((prevSheets) => {
+            const sheetName = `Sheet-${prevSheets.length}`;
+            setActiveSheet(sheetName);
+            setWorkbookData((prevData) => ({...prevData, [sheetName]: emptyArray}));
+            return [...prevSheets, sheetName];
+        })
+    }
+
     return (
         <div className="workbook-observer">
             <h2>Workbook Data</h2>
+            <button onClick={handleCreateSheet}>Creane new sheet</button>
             <SheetSelector/>
 
             {hasData ? (

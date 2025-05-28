@@ -22,12 +22,12 @@ const Sheet = ({hasHeaders}) => {
                     {workbookData[activeSheet]?.slice(hasHeaders ? 1 : 0).map((row, rowIndex) => (
                         <tr key={rowIndex}>
                             <td className="row-index">
-                                {rowIndex + 1}
+                                {rowIndex}
                             </td>
                             {row.map((val, cellIndex) =>
                                 <Cell
                                     cellValue={val}
-                                    row={rowIndex + 1}
+                                    row={rowIndex}
                                     col={cellIndex}
                                     key={cellIndex}
                                 />

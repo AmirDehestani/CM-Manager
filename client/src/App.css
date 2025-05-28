@@ -118,6 +118,7 @@ footer {
 
 .cell {
     border: 1px solid white;
+    min-height: 20px;
 }
 
 .cell:hover {

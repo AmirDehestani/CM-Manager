@@ -3,16 +3,16 @@ import { WorkbookContext } from '../contexts/WorkbookContext';
 
 const Cell = memo(
     // Memo is essential to prevent unnecessary re-renders
-    ({ cellValue, row, col }) => {
+    ({ row, col, cellValue="" }) => {
         const [isEditing, setIsEditing] = useState(false);
         const [value, setValue] = useState(cellValue);
         const [hovered, setHovered] = useState(false);
-        const {setWorkbookData, activeSheet} = useContext(WorkbookContext)
+        const {setWorkbookData, activeSheet, workbookData} = useContext(WorkbookContext)
 
         // This updates the existing cell value when the active sheet changes
         useEffect(() => {
             setValue(cellValue);
-        }, [cellValue]);
+        }, [cellValue, workbookData]);
 
 
         const handleChange = (e) => {
@@ -40,8 +40,41 @@ const Cell = memo(
             setIsEditing(true);
         };
 
+        const handlePaste = (e) => {
+            var clipboardData, pastedData;
+            // Get pasted data via clipboard API
+            clipboardData = e.clipboardData || window.clipboardData;
+            pastedData = clipboardData.getData('Text');
+
+            // Do whatever with pasteddata
+            const rows = pastedData.split('\r\n');
+            if (rows.length > 1) {
+                e.preventDefault();
+
+                for(let i = 0; i<rows.length-1; i++){
+                const columns = rows[i].split('\t');
+                    for(let j = 0; j<columns.length; j++){
+                        // borderCollision(i, j);
+                        setWorkbookData((prevData) => {
+                            if (prevData[activeSheet][row + i][col + j] === columns[j])
+                                return prevData;
+
+                            const newData = { ...prevData };
+                            newData[activeSheet] = [...prevData[activeSheet]];
+                            newData[activeSheet][row + i] = [...prevData[activeSheet][row + i]];
+                            newData[activeSheet][row + i][col + j] = columns[j];
+
+                            return newData;
+                        });
+                        console.log(`this r${window.row+i}c${window.column + j}`)
+                    }
+                
+                }
+            }
+        }
+
         return (
-            <td className={`cell ${hovered ? 'hovered-cell' : ''}`} onClick={handleEdit} onMouseEnter={() => setHovered(true)} onMouseLeave={()=>setHovered(false)}>
+            <td className={`cell ${hovered ? 'hovered-cell' : ''}`} onClick={handleEdit} onMouseEnter={() => setHovered(true)} onMouseLeave={()=>setHovered(false)} onPaste={handlePaste}>
                 {isEditing ? (
                     <input
                         autoFocus
