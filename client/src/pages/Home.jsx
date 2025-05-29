@@ -2,6 +2,7 @@ import { useEffect, useContext } from "react";
 import ExcelInput from "../components/ExcelInput";
 import WorkbookObserver from "../components/WorkbookObserver";
 import { WorkbookContext } from "../contexts/WorkbookContext";
+import BlockGenerator from "../components/BlockGenerator";
 
 
 const Home = () => {
@@ -20,6 +21,7 @@ const Home = () => {
     return (
         <>
             <ExcelInput />
+            <BlockGenerator />
             <WorkbookObserver />
         </>
     )
